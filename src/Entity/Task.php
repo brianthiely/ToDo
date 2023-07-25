@@ -31,6 +31,9 @@ class Task
     #[ORM\Column(type: Types::BOOLEAN)]
     private bool $isDone;
 
+    #[ORM\ManyToOne(inversedBy: 'tasks')]
+    private ?User $User = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -78,8 +81,36 @@ class Task
         return $this->isDone;
     }
 
+    /**
+     * @return string
+     */
+    public function getAuthor(): string
+    {
+        return $this->author;
+    }
+
+    /**
+     * @param string $author
+     */
+    public function setAuthor(string $author): void
+    {
+        $this->author = $author;
+    }
+
     public function toggle($flag): void
     {
         $this->isDone = $flag;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->User;
+    }
+
+    public function setUser(?User $User): static
+    {
+        $this->User = $User;
+
+        return $this;
     }
 }

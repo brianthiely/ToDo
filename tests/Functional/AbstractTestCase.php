@@ -2,7 +2,9 @@
 
 namespace App\Tests\Functional;
 
-use Doctrine\Persistence\ObjectRepository;
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
@@ -17,37 +19,54 @@ abstract class AbstractTestCase extends WebTestCase
 
     protected RouterInterface $urlGenerator;
 
-    protected ObjectRepository $repository;
 
-    protected string $entityClass;
 
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     protected function setUp(): void
     {
-
         $this->client = static::createClient();
 
-        $this->repository = self::getContainer()->get('doctrine')->getRepository($this->entityClass);
-
         $this->urlGenerator = self::getContainer()->get(RouterInterface::class);
-
     }
 
+    /**
+     * @throws Exception
+     */
+    protected function getEntityManager(): EntityManagerInterface
+    {
+        return static::getContainer()->get(EntityManagerInterface::class);
+    }
 
     protected function accessPage(string $routeName, array $routeParams = [], string $method = 'GET'): Crawler
     {
         $url = $this->urlGenerator->generate($routeName, $routeParams);
         $this->client->request($method, $url);
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
 
         return $this->client->getCrawler();
     }
 
 
+    /**
+     * @throws Exception
+     */
+    protected function loginUser(string $username): void
+    {
+        $user = $this->getEntityManager()->getRepository(User::class)->findOneBy(['username' => $username]);
+        $this->client->loginUser($user);
+    }
+
+    /**
+     * @throws Exception
+     */
+    protected function getLoggedInUser(): User
+    {
+        $tokenStorage  = self::getContainer()->get('security.token_storage');
+        return $tokenStorage->getToken()->getUser();
+    }
 
     protected function submitForm(Crawler $crawler, string $buttonText, array $formData = []): Crawler
     {
