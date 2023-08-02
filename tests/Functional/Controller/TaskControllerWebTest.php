@@ -4,12 +4,12 @@ namespace App\Tests\Functional\Controller;
 
 use App\Entity\Task;
 use App\Entity\User;
-use App\Tests\Functional\AbstractTestCase;
+use App\Tests\Functional\AbstractWebTestCase;
 use Exception;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
 
-class TaskControllerTest extends AbstractTestCase
+class TaskControllerWebTest extends AbstractWebTestCase
 {
 
     /**

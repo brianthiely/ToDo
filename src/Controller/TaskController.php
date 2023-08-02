@@ -28,7 +28,6 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @throws ORMException
      */
     #[Route('/tasks/create', name: 'task_create')]
     public function createAction(Request $request): RedirectResponse|Response

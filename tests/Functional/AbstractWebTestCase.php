@@ -13,7 +13,7 @@ use Symfony\Component\Routing\RouterInterface;
 
 
 
-abstract class AbstractTestCase extends WebTestCase
+abstract class AbstractWebTestCase extends WebTestCase
 {
     protected ?KernelBrowser $client = null;
 

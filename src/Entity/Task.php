@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\TaskRepository;
+use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -16,7 +17,7 @@ class Task
     private int $id;
 
     #[ORM\Column()]
-    private \DateTimeImmutable $createdAt;
+    private ?DateTimeImmutable $created_at = null;
 
 
     #[ORM\Column]
@@ -36,7 +37,6 @@ class Task
 
     public function __construct()
     {
-        $this->createdAt = new \DateTimeImmutable();
         $this->isDone = false;
     }
 
@@ -45,15 +45,19 @@ class Task
         return $this->id;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    /**
+     * @return DateTimeImmutable|null
+     */
+    public function getCreatedAt(): ?DateTimeImmutable
     {
-        return $this->createdAt;
+        return $this->created_at;
     }
 
     #[ORM\PrePersist]
-    public function setCreatedAt(): void
+    public function setCreatedAt(): self
     {
-        $this->createdAt = new \DateTimeImmutable();
+        $this->created_at = new DateTimeImmutable();
+        return $this;
     }
 
     public function getTitle(): string
@@ -61,9 +65,10 @@ class Task
         return $this->title;
     }
 
-    public function setTitle($title): void
+    public function setTitle($title): self
     {
         $this->title = $title;
+        return $this;
     }
 
     public function getContent(): string
@@ -71,30 +76,15 @@ class Task
         return $this->content;
     }
 
-    public function setContent($content): void
+    public function setContent($content): self
     {
         $this->content = $content;
+        return $this;
     }
 
     public function isDone(): bool
     {
         return $this->isDone;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAuthor(): string
-    {
-        return $this->author;
-    }
-
-    /**
-     * @param string $author
-     */
-    public function setAuthor(string $author): void
-    {
-        $this->author = $author;
     }
 
     public function toggle($flag): void
