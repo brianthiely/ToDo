@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -15,14 +16,17 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractController
 {
 
-    public function __construct(private readonly UserPasswordHasherInterface $passwordHashed, private readonly EntityManagerInterface $em)
+    public function __construct(private readonly UserPasswordHasherInterface $passwordHashed,
+                                private readonly EntityManagerInterface $em,
+                                private readonly UserRepository $userRepository
+    )
     {
     }
 
     #[Route('/users', name: 'user_list')]
     public function listAction(): Response
     {
-        return $this->render('user/list.html.twig', ['users' => $this->getDoctrine()->getRepository('AppBundle:UserFixtures')->findAll()]);
+        return $this->render('user/list.html.twig', ['users' => $this->userRepository->findAll()]);
     }
 
     #[Route('/users/create', name: 'user_create')]
@@ -49,7 +53,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/users/{id}/edit', name: 'user_edit')]
-    public function editAction(UserFixtures $user, Request $request): RedirectResponse|Response
+    public function editAction(User $user, Request $request): RedirectResponse|Response
     {
         $form = $this->createForm(UserType::class, $user);
 
