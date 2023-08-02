@@ -2,10 +2,10 @@
 
 namespace App\Tests\Functional\Controller;
 
-use App\Tests\Functional\AbstractTestCase;
+use App\Tests\Functional\AbstractWebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class SecurityControllerTest extends AbstractTestCase
+class SecurityControllerWebTest extends AbstractWebTestCase
 {
 
     public function testLoginSuccess() : void

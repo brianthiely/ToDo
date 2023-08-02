@@ -3,11 +3,11 @@
 namespace App\Tests\Functional\Controller;
 
 use App\Entity\User;
-use App\Tests\Functional\AbstractTestCase;
+use App\Tests\Functional\AbstractWebTestCase;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
 
-class UserControllerTest extends AbstractTestCase
+class UserControllerWebTest extends AbstractWebTestCase
 {
 
     /**

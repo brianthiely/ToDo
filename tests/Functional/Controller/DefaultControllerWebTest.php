@@ -2,10 +2,10 @@
 
 namespace App\Tests\Functional\Controller;
 
-use App\Tests\Functional\AbstractTestCase;
+use App\Tests\Functional\AbstractWebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class DefaultControllerTest extends AbstractTestCase
+class DefaultControllerWebTest extends AbstractWebTestCase
 {
 
     public function testHomepageIsUp(): void

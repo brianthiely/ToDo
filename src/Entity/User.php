@@ -53,9 +53,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->username;
     }
 
-    public function setUsername($username): void
+    public function setUsername($username): self
     {
         $this->username = $username;
+        return $this;
+
     }
 
     public function getSalt()
@@ -68,9 +70,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
-    public function setPassword($password): void
+    public function setPassword($password): self
     {
         $this->password = $password;
+        return $this;
     }
 
     public function getEmail(): string
@@ -78,22 +81,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function setEmail($email): void
+    public function setEmail($email): self
     {
         $this->email = $email;
+        return $this;
     }
 
     public function getRoles(): array
     {
-        return array('ROLE_USER');
+        $roles = $this->roles;
+        return array_unique($roles);
     }
 
     /**
      * @param array $roles
      */
-    public function setRoles(array $roles): void
+    public function setRoles(array $roles): self
     {
         $this->roles = $roles;
+
+        return $this;
     }
 
     public function eraseCredentials()
@@ -113,27 +120,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->tasks;
     }
 
-    public function addTask(Task $task): static
-    {
-        if (!$this->tasks->contains($task)) {
-            $this->tasks->add($task);
-            $task->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTask(Task $task): static
-    {
-        if ($this->tasks->removeElement($task)) {
-            // set the owning side to null (unless already changed)
-            if ($task->getUser() === $this) {
-                $task->setUser(null);
-            }
-        }
-
-        return $this;
-    }
+//    public function addTask(Task $task): static
+//    {
+//        if (!$this->tasks->contains($task)) {
+//            $this->tasks->add($task);
+//            $task->setUser($this);
+//        }
+//
+//        return $this;
+//    }
+//
+//    public function removeTask(Task $task): static
+//    {
+//        if ($this->tasks->removeElement($task)) {
+//            // set the owning side to null (unless already changed)
+//            if ($task->getUser() === $this) {
+//                $task->setUser(null);
+//            }
+//        }
+//
+//        return $this;
+//    }
 
     public function isAdmin(): bool
     {
