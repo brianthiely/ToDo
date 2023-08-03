@@ -14,11 +14,12 @@ class TaskFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
 
-        $taskWithoutUser = new Task();
-        $taskWithoutUser->setTitle('Tâche sans utilisateur');
-        $taskWithoutUser->setContent('Contenu de la tâche sans utilisateur');
-        $taskWithoutUser->setUser(null);
-        $manager->persist($taskWithoutUser);
+        for ($i = 0; $i < 20; $i++) {
+            $task = new Task();
+            $task->setTitle('Tâche n°' . $i);
+            $task->setContent('Contenu de la tâche n°' . $i);
+            $manager->persist($task);
+        }
 
         $manager->flush();
     }

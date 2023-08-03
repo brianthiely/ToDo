@@ -33,12 +33,12 @@ class TaskController extends AbstractController
     public function createAction(Request $request): RedirectResponse|Response
     {
         $task = new Task();
-        $form = $this->createForm(TaskType::class, $task);
+        $task->setUser($this->getUser());
 
+        $form = $this->createForm(TaskType::class, $task);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $this->em->persist($task);
             $this->em->flush();
 

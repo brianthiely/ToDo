@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Task
 {
     #[ORM\Id]
@@ -16,14 +17,9 @@ class Task
     #[ORM\Column]
     private int $id;
 
-    #[ORM\Column()]
-    private ?DateTimeImmutable $created_at = null;
-
-
     #[ORM\Column]
     #[Assert\NotBlank(message: 'Vous devez saisir un titre.')]
     private string $title;
-
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank(message: 'Vous devez saisir du contenu.')]
@@ -31,6 +27,9 @@ class Task
 
     #[ORM\Column(type: Types::BOOLEAN)]
     private bool $isDone;
+
+    #[ORM\Column()]
+    private ?DateTimeImmutable $created_at;
 
     #[ORM\ManyToOne(inversedBy: 'tasks')]
     private ?User $User = null;
@@ -54,10 +53,9 @@ class Task
     }
 
     #[ORM\PrePersist]
-    public function setCreatedAt(): self
+    public function setCreatedAt(): void
     {
         $this->created_at = new DateTimeImmutable();
-        return $this;
     }
 
     public function getTitle(): string
