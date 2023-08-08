@@ -24,6 +24,12 @@
         </testsuite>
     </testsuites>
 
+    <source>
+        <include>
+            <directory>./src</directory>
+        </include>
+    </source>
+
     <coverage includeUncoveredFiles="true"
               pathCoverage="false"
               ignoreDeprecatedCodeUnits="true"
@@ -35,4 +41,5 @@
     <extensions>
         <bootstrap class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension" />
     </extensions>
+
 </phpunit>

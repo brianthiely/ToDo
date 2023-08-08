@@ -22,6 +22,6 @@ yarn-error.log
 ###< phpunit/phpunit ###
 
 ###> symfony/phpunit-bridge ###
-.phpunit.result.cache
-/phpunit.xml
+.phpunit.cache
+/phpunit.xml.dist
 ###< symfony/phpunit-bridge ###

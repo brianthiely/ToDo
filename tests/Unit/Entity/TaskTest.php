@@ -23,20 +23,16 @@ class TaskTest extends AbstractTestCase
         $propertyValues = [
             'title' => self::VALID_TITLE_VALUE,
             'content' => self::VALID_CONTENT_VALUE,
+            'user' => new Users()
         ];
 
         $this->testGettersAndSetters($task, $propertyValues);
 
-    }
-
-    public function testCreatedAt(): void
-    {
-        $task = new Task();
-        $this->assertNull($task->getCreatedAt());
-
         $task->setCreatedAt();
-        $this->assertInstanceOf(DateTimeImmutable::class, $task->getCreatedAt());
+        $this->assertInstanceOf(\DateTimeImmutable::class, $task->getCreatedAt());
+
     }
+
 
     public function testIsDone(): void
     {
@@ -66,7 +62,6 @@ class TaskTest extends AbstractTestCase
 
         $task->setTitle(self::VALID_TITLE_VALUE)
             ->setContent(self::VALID_CONTENT_VALUE)
-            ->setCreatedAt()
             ->setUser(new Users())
             ->toggle(true);
 
@@ -79,7 +74,6 @@ class TaskTest extends AbstractTestCase
 
         $task->setTitle(self::INVALID_TITLE_VALUE)
             ->setContent(self::VALID_CONTENT_VALUE)
-            ->setCreatedAt()
             ->setUser(new Users())
             ->toggle(true);
 
@@ -94,7 +88,6 @@ class TaskTest extends AbstractTestCase
 
         $task->setTitle(self::VALID_TITLE_VALUE)
             ->setContent(self::INVALID_CONTENT_VALUE)
-            ->setCreatedAt()
             ->setUser(new Users())
             ->toggle(true);
 

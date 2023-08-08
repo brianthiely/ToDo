@@ -6,12 +6,12 @@ use App\Entity\Task;
 use App\Form\TaskType;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Exception\ORMException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class TaskController extends AbstractController
 {
@@ -53,6 +53,12 @@ class TaskController extends AbstractController
     #[Route('/tasks/{id}/edit', name: 'task_edit')]
     public function editAction(Task $task, Request $request): RedirectResponse|Response
     {
+        $user = $this->getUser();
+
+        if ($task->getUser() !== $user) {
+            throw new AccessDeniedException('Vous ne pouvez pas modifier une tâche qui ne vous appartient pas.');
+        }
+
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
@@ -74,6 +80,12 @@ class TaskController extends AbstractController
     #[Route('/tasks/{id}/toggle', name: 'task_toggle')]
     public function toggleTaskAction(Task $task): RedirectResponse
     {
+        $user = $this->getUser();
+
+        if ($task->getUser() !== $user) {
+            throw new AccessDeniedException('Vous ne pouvez pas indiquer une tâche comme terminée qui ne vous appartient pas.');
+        }
+
         $task->toggle(!$task->isDone());
         $this->em->flush();
 
@@ -85,6 +97,13 @@ class TaskController extends AbstractController
     #[Route('/tasks/{id}/delete', name: 'task_delete')]
     public function deleteTaskAction(Task $task): RedirectResponse
     {
+        $user = $this->getUser();
+        $taskUser = $task->getUser();
+
+        if (($taskUser !== $user) && ($taskUser->getUsername() !== 'Anonyme' || !$this->isGranted('ROLE_ADMIN'))) {
+            throw new AccessDeniedException('Vous ne pouvez pas supprimer cette tâche.');
+        }
+
         $this->em->remove($task);
         $this->em->flush();
 

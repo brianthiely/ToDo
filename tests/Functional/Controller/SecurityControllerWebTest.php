@@ -27,6 +27,16 @@ class SecurityControllerWebTest extends AbstractWebTestCase
 
     }
 
+    /**
+     * @throws \Exception
+     */
+    public function testLoginUserAlreadyAuthenticated() : void
+    {
+        $this->logInUser('user');
+        $this->accessPage('app_login');
+        $this->assertResponseRedirects('/');
+    }
+
     public function testLoginFailure() : void
     {
         $crawler = $this->accessPage('app_login');
@@ -46,7 +56,7 @@ class SecurityControllerWebTest extends AbstractWebTestCase
         $this->assertNull($token);
     }
 
-    public function testRememberMeFunctionality() : void
+    public function testRememberMeFunctionalityIsSuccess() : void
     {
         $crawler = $this->accessPage('app_login');
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
