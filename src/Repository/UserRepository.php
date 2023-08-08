@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Users;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 
@@ -22,5 +24,7 @@ class UserRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Users::class);
     }
+
+
 
 }

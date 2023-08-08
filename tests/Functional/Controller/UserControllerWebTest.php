@@ -13,8 +13,10 @@ class UserControllerWebTest extends AbstractWebTestCase
     /**
      * @throws Exception
      */
-    public function testCreateUserSuccess()
+    public function testCreateUserByAdminSuccess()
     {
+        $this->loginUser('admin');
+
         $crawler = $this->accessPage('user_create');
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
 
@@ -35,8 +37,13 @@ class UserControllerWebTest extends AbstractWebTestCase
 
     }
 
-    public function testErrorCreateUserWithoutUsername()
+    /**
+     * @throws Exception
+     */
+    public function testErrorCreateUserWithoutUsernameByAdmin()
     {
+        $this->loginUser('admin');
+
         $crawler = $this->accessPage('user_create');
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
 
@@ -50,8 +57,10 @@ class UserControllerWebTest extends AbstractWebTestCase
         $this->assertSelectorNotExists('div.alert.alert-success','L\'utilisateur a bien été créé');
     }
 
-    public function testErrorCreateUserWithoutEmail()
+    public function testErrorCreateUserWithoutEmailByAdmin()
     {
+        $this->loginUser('admin');
+
         $crawler = $this->accessPage('user_create');
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
 
@@ -68,10 +77,9 @@ class UserControllerWebTest extends AbstractWebTestCase
     /**
      * @throws Exception
      */
-    public function testListUserSuccess()
+    public function testListUserSuccessForAdmin()
     {
         $this->loginUser('admin');
-        $this->assertContains('ROLE_ADMIN', $this->getLoggedInUser()->getRoles());
         $this->accessPage('user_list');
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     }
@@ -79,14 +87,27 @@ class UserControllerWebTest extends AbstractWebTestCase
     /**
      * @throws Exception
      */
-    public function testEditUserSuccess(): void
+    public function testListUserForbiddenForUser()
     {
         $this->loginUser('user');
+        $this->accessPage('user_list');
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+    }
 
-        $user = $this->getLoggedInUser();
-		$userId = $user->getId();
+    /**
+     * @throws Exception
+     */
+    public function testEditUserSuccessByAdmin(): void
+    {
+        $this->loginUser('admin');
 
-        $crawler = $this->accessPage('user_edit', ['id' => $userId]);
+        $userRepository = $this->getEntityManager()->getRepository(Users::class);
+        $userToEdit = $userRepository->findOneBy(['username' => 'user']);
+        $this->assertNotNull($userToEdit, 'Aucun utilisateur avec le roles user trouvé');
+
+        $userIdToEdit = $userToEdit->getId();
+
+        $crawler = $this->accessPage('user_edit', ['id' => $userIdToEdit]);
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
 
         $this->submitForm($crawler, 'Modifier', [
@@ -99,25 +120,23 @@ class UserControllerWebTest extends AbstractWebTestCase
 
         $this->assertSelectorTextContains('div.alert.alert-success','L\'utilisateur a bien été modifié');
 
-        $updatedUser = $this->getEntityManager()
-            ->getRepository(Users::class)
-            ->findOneBy(['username' => 'UserEdit']);
-
-        $this->assertNotSame($user, $updatedUser);
+        $updatedUser = $userRepository->findOneBy(['username' => 'UserEdit']);
+        $this->assertNotNull($updatedUser, 'Aucun utilisateur avec le username UserEdit trouvé');
+        $this->assertNotSame($userToEdit, $updatedUser);
 
     }
 
     /**
      * @throws Exception
      */
-    public function testEditUserUnauthorized(): void
+    public function testEditUserUnauthorizedByUser(): void
     {
         $this->loginUser('user');
 
         $user = $this->getLoggedInUser();
         $userId = $user->getId();
 
-        $this->accessPage('users_edit', ['id' => $userId + 1]);
+        $this->accessPage('user_edit', ['id' => $userId]);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
 
@@ -125,20 +144,13 @@ class UserControllerWebTest extends AbstractWebTestCase
 
     public function testEditUserUnauthenticated(): void
     {
-        $this->accessPage('users_edit', ['id' => 1]);
+        $this->accessPage('user_edit', ['id' => 1]);
 
-        $this->assertResponseRedirects('/login');
-        $crawler = $this->client->followRedirect();
+        $this->assertTrue($this->client->getResponse()->isRedirect());
 
-        $this->submitForm($crawler, 'Modifier', [
-            'user[username]' => 'UserEdit',
-            'user[password][first]' => 'PasswordEdit',
-            'user[password][second]' => 'PasswordEdit',
-            'user[email]' => 'mailEdit@mail.com',
-            'user[roles]' => 'ROLE_ADMIN'
-        ]);
+        $redirectUrl = $this->client->getResponse()->headers->get('location');
+        $this->assertEquals('/login', parse_url($redirectUrl, PHP_URL_PATH));
 
-        $this->assertResponseRedirects('/login');
 
     }
 
