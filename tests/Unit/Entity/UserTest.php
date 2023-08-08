@@ -2,7 +2,7 @@
 
 namespace App\Tests\Unit\Entity;
 
-use App\Entity\User;
+use App\Entity\Users;
 use App\Tests\Unit\AbstractTestCase;
 
 class UserTest extends AbstractTestCase
@@ -20,7 +20,7 @@ class UserTest extends AbstractTestCase
 
     public function testUserGettersAndSetters()
     {
-        $user = new User();
+        $user = new Users();
         $propertyValues = [
             'username' => self::VALID_USERNAME_VALUE,
             'email' => self::VALID_EMAIL_VALUE,
@@ -33,7 +33,7 @@ class UserTest extends AbstractTestCase
 
     public function testUserEntityIsValid()
     {
-        $user = new User();
+        $user = new Users();
 
         $user->setUsername(self::VALID_USERNAME_VALUE)
             ->setEmail(self::VALID_EMAIL_VALUE)
@@ -46,7 +46,7 @@ class UserTest extends AbstractTestCase
 
     public function testUserEntityInvalidEmailEntered()
     {
-        $user = new User();
+        $user = new Users();
 
         $user->setUsername(self::VALID_USERNAME_VALUE)
             ->setEmail(self::INVALID_EMAIL_VALUE)
@@ -60,7 +60,7 @@ class UserTest extends AbstractTestCase
 
     public function testUserEntityInvalidUsernameEntered()
     {
-        $user = new User();
+        $user = new Users();
 
         $user->setUsername(self::INVALID_USERNAME_VALUE)
             ->setEmail(self::VALID_EMAIL_VALUE)
@@ -74,7 +74,7 @@ class UserTest extends AbstractTestCase
 
     public function testIsAdmin(): void
     {
-        $user = new User();
+        $user = new Users();
         $user->setRoles(self::ADMIN_ROLES);
 
         $this->assertTrue($user->isAdmin());
@@ -82,7 +82,7 @@ class UserTest extends AbstractTestCase
 
     public function testIsNotAdmin(): void
     {
-        $user = new User();
+        $user = new Users();
         $user->setRoles(self::USER_ROLES);
 
         $this->assertFalse($user->isAdmin());

@@ -3,7 +3,7 @@
 namespace App\Tests\Functional\Controller;
 
 use App\Entity\Task;
-use App\Entity\User;
+use App\Entity\Users;
 use App\Tests\Functional\AbstractWebTestCase;
 use Exception;
 use Symfony\Component\DomCrawler\Crawler;
@@ -11,36 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TaskControllerWebTest extends AbstractWebTestCase
 {
-
-    /**
-     * @throws Exception
-     */
-    public function testAllCreateTask()
-    {
-        $this->testCreateTaskSuccess();
-        $this->testCreateTaskUnauthenticatedUser();
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function testAllEditTask()
-    {
-        $this->testEditTaskSuccess();
-        $this->testEditTaskUnauthorizedUser();
-        $this->testEditTaskUnauthenticatedUser();
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function testToggleTask()
-    {
-        $this->testToggleTaskSuccess();
-        $this->testToggleTaskUnauthorizedUser();
-        $this->testToggleTaskUnauthenticatedUser();
-    }
-
     /**
      * @throws Exception
      */
@@ -84,7 +54,7 @@ class TaskControllerWebTest extends AbstractWebTestCase
     /**
      * @throws Exception
      */
-    private function testCreateTaskSuccess(): void
+    public function testCreateTaskSuccess(): void
     {
         // Se connecter en tant qu'utilisateur "user"
         $this->loginUser('user');
@@ -116,7 +86,7 @@ class TaskControllerWebTest extends AbstractWebTestCase
 
     }
 
-    private function testCreateTaskUnauthenticatedUser(): void
+    public function testCreateTaskUnauthenticatedUser(): void
     {
         $this->accessPage('task_create');
 
@@ -136,7 +106,7 @@ class TaskControllerWebTest extends AbstractWebTestCase
     /**
      * @throws Exception
      */
-    private function testEditTaskSuccess(): void
+    public function testEditTaskSuccess(): void
     {
         // Se connecter en tant qu'utilisateur "user"
         $this->loginUser('user');
@@ -182,7 +152,7 @@ class TaskControllerWebTest extends AbstractWebTestCase
     /**
      * @throws Exception
      */
-    private function testEditTaskUnauthorizedUser(): void
+    public function testEditTaskUnauthorizedUser(): void
     {
         $this->loginUser('user');
 
@@ -197,7 +167,7 @@ class TaskControllerWebTest extends AbstractWebTestCase
 
     }
 
-    private function testEditTaskUnauthenticatedUser(): void
+    public function testEditTaskUnauthenticatedUser(): void
     {
         $this->accessPage('task_edit', ['id' => 63]);
 
@@ -217,7 +187,7 @@ class TaskControllerWebTest extends AbstractWebTestCase
     /**
      * @throws Exception
      */
-    private function testToggleTaskSuccess(): void
+    public function testToggleTaskSuccess(): void
     {
         // Se connecter en tant qu'utilisateur "user"
         $this->loginUser('user');
@@ -248,7 +218,7 @@ class TaskControllerWebTest extends AbstractWebTestCase
     /**
      * @throws Exception
      */
-    private function testToggleTaskUnauthorizedUser(): void
+    public function testToggleTaskUnauthorizedUser(): void
     {
         $this->loginUser('user');
 
@@ -263,7 +233,7 @@ class TaskControllerWebTest extends AbstractWebTestCase
 
     }
 
-	private function testToggleTaskUnauthenticatedUser(): void
+	public function testToggleTaskUnauthenticatedUser(): void
     {
         $this->accessPage('task_toggle', ['id' => 63]);
 
@@ -274,7 +244,7 @@ class TaskControllerWebTest extends AbstractWebTestCase
     /**
      * @throws Exception
      */
-    private function testDeleteTaskByOwner(Crawler $crawler, User $user): void
+    public function testDeleteTaskByOwner(Crawler $crawler, Users $user): void
     {
         $userIdConnected = $user->getId();
         $task = $this->getEntityManager()
@@ -291,7 +261,7 @@ class TaskControllerWebTest extends AbstractWebTestCase
     /**
      * @throws Exception
      */
-    private function testDeleteTaskByAdmin(Crawler $crawler, User $adminUser): void
+    public function testDeleteTaskByAdmin(Crawler $crawler, Users $adminUser): void
     {
         $taskAnonymous = $this->getEntityManager()
             ->getRepository(Task::class)
@@ -307,7 +277,7 @@ class TaskControllerWebTest extends AbstractWebTestCase
     /**
      * @throws Exception
      */
-    private function testDeleteTaskUnauthorized(User $user): void
+    public function testDeleteTaskUnauthorized(Users $user): void
     {
         $userIdConnected = $user->getId();
         $task = $this->getEntityManager()

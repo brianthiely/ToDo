@@ -3,7 +3,7 @@
 namespace App\Tests\Unit\Entity;
 
 use App\Entity\Task;
-use App\Entity\User;
+use App\Entity\Users;
 use App\Tests\Unit\AbstractTestCase;
 use DateTimeImmutable;
 
@@ -50,7 +50,7 @@ class TaskTest extends AbstractTestCase
     {
         $task = new Task();
 
-        $user = new User();
+        $user = new Users();
         $user->setUsername('username')
             ->setEmail('user@test.com')
             ->setPassword('password')
@@ -67,7 +67,7 @@ class TaskTest extends AbstractTestCase
         $task->setTitle(self::VALID_TITLE_VALUE)
             ->setContent(self::VALID_CONTENT_VALUE)
             ->setCreatedAt()
-            ->setUser(new User())
+            ->setUser(new Users())
             ->toggle(true);
 
         $this->getValidationErrors($task);
@@ -80,7 +80,7 @@ class TaskTest extends AbstractTestCase
         $task->setTitle(self::INVALID_TITLE_VALUE)
             ->setContent(self::VALID_CONTENT_VALUE)
             ->setCreatedAt()
-            ->setUser(new User())
+            ->setUser(new Users())
             ->toggle(true);
 
         $errors = $this->validator->validate($task);
@@ -95,7 +95,7 @@ class TaskTest extends AbstractTestCase
         $task->setTitle(self::VALID_TITLE_VALUE)
             ->setContent(self::INVALID_CONTENT_VALUE)
             ->setCreatedAt()
-            ->setUser(new User())
+            ->setUser(new Users())
             ->toggle(true);
 
         $errors = $this->validator->validate($task);

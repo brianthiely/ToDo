@@ -2,7 +2,7 @@
 
 namespace App\Tests\Functional\Controller;
 
-use App\Entity\User;
+use App\Entity\Users;
 use App\Tests\Functional\AbstractWebTestCase;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,18 +28,41 @@ class UserControllerWebTest extends AbstractWebTestCase
 
         $this->assertSelectorTextContains('div.alert.alert-success','L\'utilisateur a bien été créé');
         $user = $this->getEntityManager()
-            ->getRepository(User::class)
+            ->getRepository(Users::class)
             ->findOneBy(['username' => 'UserTest']);
 
         $this->assertNotNull($user);
 
     }
 
-    public function testAllEditUser()
+    public function testErrorCreateUserWithoutUsername()
     {
-        $this->testEditUserSuccess();
-        $this->testEditUserUnauthorized();
-        $this->testEditUserUnauthenticated();
+        $crawler = $this->accessPage('user_create');
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+
+        $this->submitForm($crawler, 'Ajouter', [
+            'user[password][first]' => 'PasswordTest',
+            'user[password][second]' => 'PasswordTest',
+            'user[email]' => 'user@test.com',
+            'user[roles]' => 'ROLE_USER'
+        ]);
+
+        $this->assertSelectorNotExists('div.alert.alert-success','L\'utilisateur a bien été créé');
+    }
+
+    public function testErrorCreateUserWithoutEmail()
+    {
+        $crawler = $this->accessPage('user_create');
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+
+        $this->submitForm($crawler, 'Ajouter', [
+            'user[username]' => 'UserTest',
+            'user[password][first]' => 'PasswordTest',
+            'user[password][second]' => 'PasswordTest',
+            'user[roles]' => 'ROLE_USER'
+        ]);
+
+        $this->assertSelectorNotExists('div.alert.alert-success','L\'utilisateur a bien été créé');
     }
 
     /**
@@ -56,7 +79,7 @@ class UserControllerWebTest extends AbstractWebTestCase
     /**
      * @throws Exception
      */
-    private function testEditUserSuccess(): void
+    public function testEditUserSuccess(): void
     {
         $this->loginUser('user');
 
@@ -77,7 +100,7 @@ class UserControllerWebTest extends AbstractWebTestCase
         $this->assertSelectorTextContains('div.alert.alert-success','L\'utilisateur a bien été modifié');
 
         $updatedUser = $this->getEntityManager()
-            ->getRepository(User::class)
+            ->getRepository(Users::class)
             ->findOneBy(['username' => 'UserEdit']);
 
         $this->assertNotSame($user, $updatedUser);
@@ -87,22 +110,22 @@ class UserControllerWebTest extends AbstractWebTestCase
     /**
      * @throws Exception
      */
-    private function testEditUserUnauthorized(): void
+    public function testEditUserUnauthorized(): void
     {
         $this->loginUser('user');
 
         $user = $this->getLoggedInUser();
         $userId = $user->getId();
 
-        $this->accessPage('user_edit', ['id' => $userId + 1]);
+        $this->accessPage('users_edit', ['id' => $userId + 1]);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
 
     }
 
-    private function testEditUserUnauthenticated(): void
+    public function testEditUserUnauthenticated(): void
     {
-        $this->accessPage('user_edit', ['id' => 1]);
+        $this->accessPage('users_edit', ['id' => 1]);
 
         $this->assertResponseRedirects('/login');
         $crawler = $this->client->followRedirect();

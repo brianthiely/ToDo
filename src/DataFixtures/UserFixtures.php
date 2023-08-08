@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\User;
+use App\Entity\Users;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -24,7 +24,7 @@ class UserFixtures extends Fixture
         ];
 
         foreach ($userData as $data) {
-            $user = new User();
+            $user = new Users();
             $user->setUsername($data['username']);
             $user->setEmail($data['email']);
             $user->setPassword($this->passwordEncoder->hashPassword($user, $data['password']));

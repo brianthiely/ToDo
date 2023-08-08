@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
+use App\Entity\Users;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,7 +32,7 @@ class UserController extends AbstractController
     #[Route('/users/create', name: 'user_create')]
     public function createAction(Request $request): RedirectResponse|Response
     {
-        $user = new User();
+        $user = new Users();
         $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
@@ -53,7 +53,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/users/{id}/edit', name: 'user_edit')]
-    public function editAction(User $user, Request $request): RedirectResponse|Response
+    public function editAction(Users $user, Request $request): RedirectResponse|Response
     {
         $form = $this->createForm(UserType::class, $user);
 

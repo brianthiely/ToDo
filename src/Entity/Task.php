@@ -32,7 +32,7 @@ class Task
     private ?DateTimeImmutable $created_at;
 
     #[ORM\ManyToOne(inversedBy: 'tasks')]
-    private ?User $User = null;
+    private ?Users $User = null;
 
     public function __construct()
     {
@@ -63,7 +63,7 @@ class Task
         return $this->title;
     }
 
-    public function setTitle($title): self
+    public function setTitle(string $title): self
     {
         $this->title = $title;
         return $this;
@@ -74,7 +74,7 @@ class Task
         return $this->content;
     }
 
-    public function setContent($content): self
+    public function setContent(string $content): self
     {
         $this->content = $content;
         return $this;
@@ -85,17 +85,17 @@ class Task
         return $this->isDone;
     }
 
-    public function toggle($flag): void
+    public function toggle(bool $flag): void
     {
         $this->isDone = $flag;
     }
 
-    public function getUser(): ?User
+    public function getUser(): ?Users
     {
         return $this->User;
     }
 
-    public function setUser(?User $User): static
+    public function setUser(?Users $User): static
     {
         $this->User = $User;
 

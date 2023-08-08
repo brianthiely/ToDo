@@ -3,7 +3,7 @@
 namespace App\Command;
 
 use App\Entity\Task;
-use App\Entity\User;
+use App\Entity\Users;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -37,10 +37,10 @@ class UpdateAnonymeTaskCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $anonymeUser = $this->em->getRepository(User::class)->findOneBy(['username' => 'Anonyme']);
+        $anonymeUser = $this->em->getRepository(Users::class)->findOneBy(['username' => 'Anonyme']);
 
         if(!$anonymeUser){
-            $anonymeUser = new User();
+            $anonymeUser = new Users();
             $anonymeUser->setUsername('Anonyme')
                         ->setPassword($this->passwordHasher->hashPassword
                         ($anonymeUser, bin2hex(random_bytes(60))))

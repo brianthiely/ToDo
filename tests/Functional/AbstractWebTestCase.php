@@ -2,7 +2,7 @@
 
 namespace App\Tests\Functional;
 
-use App\Entity\User;
+use App\Entity\Users;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -55,14 +55,14 @@ abstract class AbstractWebTestCase extends WebTestCase
      */
     protected function loginUser(string $username): void
     {
-        $user = $this->getEntityManager()->getRepository(User::class)->findOneBy(['username' => $username]);
+        $user = $this->getEntityManager()->getRepository(Users::class)->findOneBy(['username' => $username]);
         $this->client->loginUser($user);
     }
 
     /**
      * @throws Exception
      */
-    protected function getLoggedInUser(): User
+    protected function getLoggedInUser(): Users
     {
         $tokenStorage  = self::getContainer()->get('security.token_storage');
         return $tokenStorage->getToken()->getUser();
@@ -77,8 +77,10 @@ abstract class AbstractWebTestCase extends WebTestCase
         }
 
         $crawler = $this->client->submit($form);
-        $this->client->followRedirect();
 
+        if ($this->client->getResponse()->isRedirection()) {
+            $crawler = $this->client->followRedirect();
+        }
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
 
         return $crawler;
