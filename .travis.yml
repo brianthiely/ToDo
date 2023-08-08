@@ -1,6 +1,9 @@
 language: php
 php:
   - '8.1'
+
+services:
+  - postgresql
 script:
   - composer install
   - yarn install
