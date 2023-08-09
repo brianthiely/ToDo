@@ -9,7 +9,7 @@ before_script:
   - composer install
   - yarn install
   - yarn encore dev
-  - psql -c 'create database todo_test;' -U postgres
+  - psql -c 'create database ToDo_test;' -U postgres
   - DATABASE_URL=postgresql://postgres@localhost:5432/ToDo_test php bin/console d:s:u --force
 
 
