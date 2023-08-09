@@ -12,6 +12,7 @@ before_script:
   - psql -c 'create database ToDo_test;' -U postgres
   - psql -c 'create database ToDo;' -U postgres
   - php bin/console doctrine:schema:update --force
+  - php bin/console doctrine:schema:update --force --env=test
   - php bin/console doctrine:fixtures:load
   - php bin/console doctrine:fixtures:load --env=test
 
