@@ -11,14 +11,15 @@ before_script:
   - yarn encore dev
   - psql -c 'create database ToDo_test;' -U postgres
   - psql -c 'create database ToDo;' -U postgres
-
-
-
-script:
+  - sleep 5
   - php bin/console doctrine:schema:update --force
   - php bin/console doctrine:schema:update --force --env=test
   - php bin/console doctrine:fixtures:load
   - php bin/console doctrine:fixtures:load --env=test
+
+
+
+script:
   - php bin/console tasks:anonymous
   - php bin/console tasks:anonymous --env=test
   - vendor/bin/phpunit
