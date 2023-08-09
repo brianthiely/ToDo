@@ -6,7 +6,7 @@ services:
   - postgresql
 
 before_script:
-  - psql -c 'create database ToDo;' -U postgres
+  - php bin/console doctrine:database:create
 
 
 script:
