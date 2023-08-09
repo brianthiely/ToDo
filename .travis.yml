@@ -5,18 +5,14 @@ php:
 services:
   - postgresql
 
+env:
+  global:
+    - DATABASE_URL=postgresql://postgres:395593@localhost:5432/ToDo_test
+
 before_script:
   - composer install
   - yarn install
   - yarn encore dev
-  - psql -c 'create database ToDo_test;' -U postgres
-  - DATABASE_URL=postgresql://postgres@localhost:5432/ToDo_test php bin/console d:s:u --force
-
-
-
-
 
 script:
-  - php bin/console d:f:l
-  - php bin/console task:anonymous
   - vendor/bin/phpunit
