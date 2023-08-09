@@ -10,4 +10,7 @@ script:
   - yarn install
   - yarn encore dev
   - php bin/console doctrine:database:create --env=test
+  - php bin/console doctrine:schema:update --force --env=test
+  - php bin/console doctrine:fixtures:load --env=test
+  - php bin/console task-anonymous --env=test
   - vendor/bin/phpunit
