@@ -5,12 +5,12 @@ php:
 services:
   - postgresql
 
-env:
-  global:
-    - DATABASE_URL="postgresql://postgres:395593@127.0.0.1:5432/ToDo?serverVersion=15&charset=utf8"
+
+
 
 
 before_script:
+  - cp config/database.yml.travis config/package/doctrine.yaml
   - composer install
   - yarn install
   - yarn encore dev
