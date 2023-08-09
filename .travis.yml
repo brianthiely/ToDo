@@ -5,15 +5,11 @@ php:
 services:
   - postgresql
 
-
-
-
-
 before_script:
-  - cp config/database.yml.travis config/package/doctrine.yaml
+  - psql -c 'create database ToDo;' -U postgres
+
+script:
   - composer install
   - yarn install
   - yarn encore dev
-
-script:
   - vendor/bin/phpunit
