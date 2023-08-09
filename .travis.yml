@@ -5,12 +5,9 @@ php:
 services:
   - postgresql
 
-before_script:
-  - php bin/console doctrine:database:create
-
-
 script:
   - composer install
   - yarn install
   - yarn encore dev
+  - php bin/console doctrine:database:create
   - vendor/bin/phpunit
