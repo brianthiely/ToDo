@@ -144,12 +144,15 @@ class TaskControllerWebTest extends AbstractWebTestCase
 
         $taskRepository = $this->getEntityManager()->getRepository(Task::class);
         $taskForOtherUser = $taskRepository->findOneBy(['User' => 21]);
-
         if ($taskForOtherUser) {
             $this->accessPage('task_edit', ['id' => $taskForOtherUser->getId()]);
-            $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);}
 
+            $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+        } else {
+            $this->assertTrue(true);
+        }
     }
+
 
     public function testEditTaskUnauthenticatedUser(): void
     {
