@@ -7,7 +7,7 @@ services:
 
 env:
   global:
-    - DATABASE_URL=postgresql://postgres:395593@localhost:5432/ToDo_test
+    - DATABASE_URL=postgresql://postgres:395593@localhost:5432/ToDo
 
 before_script:
   - composer install
