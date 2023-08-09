@@ -7,7 +7,8 @@ services:
 
 env:
   global:
-    - DATABASE_URL=postgresql://postgres:395593@localhost:5432/ToDo
+    - DATABASE_URL="postgresql://postgres:395593@127.0.0.1:5432/ToDo?serverVersion=15&charset=utf8"
+
 
 before_script:
   - composer install
