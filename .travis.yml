@@ -9,8 +9,8 @@ script:
   - composer install
   - yarn install
   - yarn encore dev
-  - php bin/console doctrine:database:create --env=test
-  - php bin/console doctrine:schema:update --force --env=test
-  - php bin/console doctrine:fixtures:load --env=test
-  - php bin/console task-anonymous --env=test
+  - php bin/console doctrine:database:create --env=test --no-interaction
+  - php bin/console doctrine:schema:update --force --env=test --no-interaction
+  - php bin/console doctrine:fixtures:load --env=test --no-interaction
+  - php bin/console task-anonymous --env=test --no-interaction
   - vendor/bin/phpunit
