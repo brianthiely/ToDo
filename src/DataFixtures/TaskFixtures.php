@@ -20,13 +20,16 @@ class TaskFixtures extends Fixture
             $task->setContent('Contenu de la tâche n°' . $i);
         }
 
+        $user1 = $manager->getRepository(Users::class)->findOneBy(['username' => 'user']);
+        $user2 = $manager->getRepository(Users::class)->findOneBy(['username' => 'user2']);
+
         $task->setTitle('Task User')
             ->setContent('OK')
-            ->setUser($this->getReference('user'));
+            ->setUser($user1->getId());
 
         $task->setTitle('Task User 2')
             ->setContent('OK')
-            ->setUser($this->getReference('user2'));
+            ->setUser($user2->getId());
 
         $manager->persist($task);
         $manager->flush();
