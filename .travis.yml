@@ -9,15 +9,14 @@ before_script:
   - composer install
   - yarn install
   - yarn encore dev
-  - psql -c 'create database ToDo_test;' -U postgres -d postgres
-  - psql -c 'create database ToDo;' -U postgres -d postgres
-  - php bin/console doctrine:schema:update --env=test
-  - php bin/console doctrine:schema:update --force
+  - psql -c 'create database todo_test;' -U postgres
+  - DATABASE_URL=postgresql://postgres@localhost:5432/ToDo_test php bin/console d:s:u --force
+
 
 
 
 
 script:
+  - php bin/console d:f:l
   - php bin/console task:anonymous
-  - php bin/console task:anonymous --env=test
   - vendor/bin/phpunit
