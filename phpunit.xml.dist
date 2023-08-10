@@ -6,6 +6,8 @@
          backupGlobals="false"
          colors="true"
          bootstrap="tests/bootstrap.php"
+
+
 >
     <php>
         <ini name="display_errors" value="1" />
@@ -22,6 +24,12 @@
         </testsuite>
     </testsuites>
 
+    <source>
+        <include>
+            <directory>./src</directory>
+        </include>
+    </source>
+
     <coverage includeUncoveredFiles="true"
               pathCoverage="false"
               ignoreDeprecatedCodeUnits="true"
@@ -31,5 +39,7 @@
 
 
     <extensions>
+        <bootstrap class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension" />
     </extensions>
+
 </phpunit>

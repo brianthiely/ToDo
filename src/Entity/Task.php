@@ -3,11 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\TaskRepository;
+use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Task
 {
     #[ORM\Id]
@@ -15,14 +17,9 @@ class Task
     #[ORM\Column]
     private int $id;
 
-    #[ORM\Column()]
-    private \DateTimeImmutable $createdAt;
-
-
     #[ORM\Column]
     #[Assert\NotBlank(message: 'Vous devez saisir un titre.')]
     private string $title;
-
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank(message: 'Vous devez saisir du contenu.')]
@@ -31,9 +28,14 @@ class Task
     #[ORM\Column(type: Types::BOOLEAN)]
     private bool $isDone;
 
+    #[ORM\Column()]
+    private ?DateTimeImmutable $created_at;
+
+    #[ORM\ManyToOne(inversedBy: 'tasks')]
+    private ?Users $User = null;
+
     public function __construct()
     {
-        $this->createdAt = new \DateTimeImmutable();
         $this->isDone = false;
     }
 
@@ -42,15 +44,18 @@ class Task
         return $this->id;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    /**
+     * @return DateTimeImmutable|null
+     */
+    public function getCreatedAt(): ?DateTimeImmutable
     {
-        return $this->createdAt;
+        return $this->created_at;
     }
 
     #[ORM\PrePersist]
     public function setCreatedAt(): void
     {
-        $this->createdAt = new \DateTimeImmutable();
+        $this->created_at = new DateTimeImmutable();
     }
 
     public function getTitle(): string
@@ -58,9 +63,10 @@ class Task
         return $this->title;
     }
 
-    public function setTitle($title): void
+    public function setTitle(string $title): self
     {
         $this->title = $title;
+        return $this;
     }
 
     public function getContent(): string
@@ -68,9 +74,10 @@ class Task
         return $this->content;
     }
 
-    public function setContent($content): void
+    public function setContent(string $content): self
     {
         $this->content = $content;
+        return $this;
     }
 
     public function isDone(): bool
@@ -78,8 +85,20 @@ class Task
         return $this->isDone;
     }
 
-    public function toggle($flag): void
+    public function toggle(bool $flag): void
     {
         $this->isDone = $flag;
+    }
+
+    public function getUser(): ?Users
+    {
+        return $this->User;
+    }
+
+    public function setUser(?Users $User): static
+    {
+        $this->User = $User;
+
+        return $this;
     }
 }
