@@ -25,3 +25,4 @@ yarn-error.log
 .phpunit.cache
 /phpunit.xml.dist
 ###< symfony/phpunit-bridge ###
+/public/test-coverage/
