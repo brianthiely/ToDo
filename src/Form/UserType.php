@@ -40,15 +40,16 @@ class UserType extends AbstractType
 
 
         $builder->get('roles')
-            ->addModelTransformer(new CallbackTransformer(
-                function ($rolesArray) {
-                    return implode(',', $rolesArray);
-                },
-                function ($rolesString) {
-                    return explode(',', $rolesString);
-                }
-            ));
-
+            ->addModelTransformer(
+                new CallbackTransformer(
+                    function ($rolesArray) {
+                        return implode(',', $rolesArray);
+                    },
+                    function ($rolesString) {
+                        return explode(',', $rolesString);
+                    }
+                )
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver): void

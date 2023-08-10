@@ -17,8 +17,10 @@ class TaskController extends AbstractController
 {
 
 
-    public function __construct(private readonly EntityManagerInterface $em, private readonly TaskRepository $taskRepository)
-    {
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+        private readonly TaskRepository $taskRepository
+    ) {
     }
 
     #[Route('/tasks', name: 'task_list')]
@@ -83,7 +85,9 @@ class TaskController extends AbstractController
         $user = $this->getUser();
 
         if ($task->getUser() !== $user) {
-            throw new AccessDeniedException('Vous ne pouvez pas indiquer une tâche comme terminée qui ne vous appartient pas.');
+            throw new AccessDeniedException(
+                'Vous ne pouvez pas indiquer une tâche comme terminée qui ne vous appartient pas.'
+            );
         }
 
         $task->toggle(!$task->isDone());

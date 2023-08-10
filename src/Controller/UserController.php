@@ -16,11 +16,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractController
 {
 
-    public function __construct(private readonly UserPasswordHasherInterface $passwordHashed,
-                                private readonly EntityManagerInterface $em,
-                                private readonly UserRepository $userRepository
-    )
-    {
+    public function __construct(
+        private readonly UserPasswordHasherInterface $passwordHashed,
+        private readonly EntityManagerInterface $em,
+        private readonly UserRepository $userRepository
+    ) {
     }
 
     #[Route('/users', name: 'user_list')]

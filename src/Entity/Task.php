@@ -56,7 +56,6 @@ class Task
     public function setCreatedAt(): void
     {
         $this->created_at = new DateTimeImmutable();
-
     }
 
     public function getTitle(): string

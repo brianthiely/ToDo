@@ -40,7 +40,6 @@ class AppFixtures extends Fixture
         }
 
         $manager->flush();
-
     }
 
     private function loadTasks(ObjectManager $manager): void

@@ -57,7 +57,6 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->username = $username;
         return $this;
-
     }
 
     public function getSalt()
@@ -97,7 +96,6 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         $this->roles = $roles;
         return $this;
     }
-
 
 
     public function eraseCredentials(): void

@@ -18,10 +18,10 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 )]
 class UpdateAnonymeTaskCommand extends Command
 {
-    public function __construct(private readonly EntityManagerInterface $em,
-                                private readonly UserPasswordHasherInterface
-                                $passwordHasher)
-    {
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly UserPasswordHasherInterface $passwordHasher
+    ) {
         parent::__construct();
     }
 
@@ -35,33 +35,40 @@ class UpdateAnonymeTaskCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
+        $style = new SymfonyStyle($input, $output);
 
-        $anonymeUser = $this->em->getRepository(Users::class)->findOneBy(['username' => 'Anonyme']);
+        $anonymeUser = $this->entityManager->getRepository(Users::class)->findOneBy(['username' => 'Anonyme']);
 
-        if(!$anonymeUser){
+        if (!$anonymeUser) {
             $anonymeUser = new Users();
             $anonymeUser->setUsername('Anonyme')
-                        ->setPassword($this->passwordHasher->hashPassword
-                        ($anonymeUser, bin2hex(random_bytes(60))))
-                        ->setEmail('anonyme@0829728729.com')
-                        ->setRoles(['ROLE_ANONYME']);
+                ->setPassword(
+                    $this->passwordHasher->hashPassword
+                    (
+                        $anonymeUser,
+                        bin2hex(random_bytes(60))
+                    )
+                )
+                ->setEmail('anonyme@0829728729.com')
+                ->setRoles(['ROLE_ANONYME']);
 
-            $this->em->persist($anonymeUser);
+            $this->entityManager->persist($anonymeUser);
 
-            $io->success('Utilisateur anonyme créé avec succès');
+            $style->success('Utilisateur anonyme créé avec succès');
         }
 
-        $tasks = $this->em->getRepository(Task::class)->findBy(['User' =>
-            null]);
+        $tasks = $this->entityManager->getRepository(Task::class)->findBy([
+            'User' =>
+                null
+        ]);
 
-        foreach($tasks as $task){
+        foreach ($tasks as $task) {
             $task->setUser($anonymeUser);
         }
 
-        $this->em->flush();
+        $this->entityManager->flush();
 
-        $io->success('Tâches sans user attribuées à l\'utilisateur anonyme avec succès');
+        $style->success('Tâches sans user attribuées à l\'utilisateur anonyme avec succès');
 
         return Command::SUCCESS;
     }
