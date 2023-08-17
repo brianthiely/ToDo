@@ -72,8 +72,9 @@ class ToggleTaskWebTest extends AbstractWebTestCase
         $taskForOtherUser = $taskRepository->findOneBy(['User' => $userId + 1]);
 
         $this->accessPage('task_toggle', ['id' => $taskForOtherUser->getId()]);
+        $this->client->followRedirect();
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+        $this->assertSelectorTextContains('div.alert.alert-danger','Vous ne pouvez pas marquer une tâche qui ne vous appartient pas comme faite.');
 
     }
 

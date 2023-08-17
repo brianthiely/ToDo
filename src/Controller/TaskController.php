@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class TaskController extends AbstractController
 {
@@ -56,9 +55,12 @@ class TaskController extends AbstractController
     public function editAction(Task $task, Request $request): RedirectResponse|Response
     {
         $user = $this->getUser();
+        $taskUser = $task->getUser();
 
-        if ($task->getUser() !== $user) {
-            throw new AccessDeniedException('Vous ne pouvez pas modifier une tâche qui ne vous appartient pas.');
+
+        if (($taskUser !== $user) && ($taskUser->getUsername() !== 'Anonyme' || !$this->isGranted('ROLE_ADMIN'))) {
+            $this->addFlash('error', 'Vous ne pouvez pas modifier une tâche qui ne vous appartient pas.');
+            return $this->redirectToRoute('task_list');
         }
 
         $form = $this->createForm(TaskType::class, $task);
@@ -83,14 +85,11 @@ class TaskController extends AbstractController
     public function toggleTaskAction(Task $task): RedirectResponse
     {
         $user = $this->getUser();
+        $taskUser = $task->getUser();
 
-        $isCreatedByAnonymous = $task->getUser()->getUsername() === 'Anonyme';
-        $isAdmin = $this->isGranted('ROLE_ADMIN');
-
-        if ($task->getUser() !== $user && !($isAdmin && $isCreatedByAnonymous)) {
-            throw new AccessDeniedException(
-                'Vous ne pouvez pas indiquer une tâche comme terminée qui ne vous appartient pas.'
-            );
+        if (($taskUser !== $user) && ($taskUser->getUsername() !== 'Anonyme' || !$this->isGranted('ROLE_ADMIN'))) {
+            $this->addFlash('error', 'Vous ne pouvez pas marquer une tâche qui ne vous appartient pas comme faite.');
+            return $this->redirectToRoute('task_list');
         }
 
         $task->toggle(!$task->isDone());
@@ -108,7 +107,8 @@ class TaskController extends AbstractController
         $taskUser = $task->getUser();
 
         if (($taskUser !== $user) && ($taskUser->getUsername() !== 'Anonyme' || !$this->isGranted('ROLE_ADMIN'))) {
-            throw new AccessDeniedException('Vous ne pouvez pas supprimer cette tâche.');
+            $this->addFlash('error', 'Vous ne pouvez pas supprimer une tâche qui ne vous appartient pas.');
+            return $this->redirectToRoute('task_list');
         }
 
         $this->em->remove($task);
