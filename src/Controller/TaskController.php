@@ -84,7 +84,10 @@ class TaskController extends AbstractController
     {
         $user = $this->getUser();
 
-        if ($task->getUser() !== $user) {
+        $isCreatedByAnonymous = $task->getUser()->getUsername() === 'Anonyme';
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+
+        if ($task->getUser() !== $user && !($isAdmin && $isCreatedByAnonymous)) {
             throw new AccessDeniedException(
                 'Vous ne pouvez pas indiquer une tâche comme terminée qui ne vous appartient pas.'
             );

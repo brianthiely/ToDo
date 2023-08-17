@@ -3,6 +3,7 @@
 namespace App\Tests\Functional\Controller\Task;
 
 use App\Entity\Task;
+use App\Entity\Users;
 use App\Tests\Functional\AbstractWebTestCase;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,6 +31,31 @@ class ToggleTaskWebTest extends AbstractWebTestCase
         $this->assertSelectorTextContains('div.alert.alert-success','La tâche '.$taskForCurrentUser->getTitle().' a bien été marquée comme faite.');
 
         $updatedTask = $taskRepository->findOneBy(['id' => $taskForCurrentUser->getId()]);
+
+        $this->assertTrue($updatedTask->isDone());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testAdminCanToggleTaskCreatedByAnonyme()
+    {
+        $this->loginUser('admin');
+
+        $userRepo = $this->getEntityManager()->getRepository(Users::class);
+        $AnonymeUser = $userRepo->findOneBy(['username' => 'Anonyme']);
+        $idAnonymeUser = $AnonymeUser->getId();
+
+        $taskRepository = $this->getEntityManager()->getRepository(Task::class);
+        $taskCreatedByAnonyme = $taskRepository->findOneBy(['User' => $idAnonymeUser]);
+
+        $this->accessPage('task_toggle', ['id' => $taskCreatedByAnonyme->getId()]);
+        $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
+        $this->client->followRedirect();
+
+        $this->assertSelectorTextContains('div.alert.alert-success','La tâche '.$taskCreatedByAnonyme->getTitle().' a bien été marquée comme faite.');
+
+        $updatedTask = $taskRepository->findOneBy(['id' => $taskCreatedByAnonyme->getId()]);
 
         $this->assertTrue($updatedTask->isDone());
     }
