@@ -74,7 +74,7 @@ class ToggleTaskWebTest extends AbstractWebTestCase
         $this->accessPage('task_toggle', ['id' => $taskForOtherUser->getId()]);
         $this->client->followRedirect();
 
-        $this->assertSelectorTextContains('div.alert.alert-danger','Vous ne pouvez pas marquer une tâche qui ne vous appartient pas comme faite.');
+        $this->assertSelectorTextContains('div.alert.alert-danger','Vous n\'avez pas les droits pour effectuer cette action.');
 
     }
 

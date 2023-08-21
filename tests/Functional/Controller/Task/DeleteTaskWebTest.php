@@ -73,7 +73,7 @@ class DeleteTaskWebTest extends AbstractWebTestCase
         $this->accessPage('task_delete', ['id' => $task->getId()]);
         $this->client->followRedirect();
 
-        $this->assertSelectorTextContains('div.alert.alert-danger', 'Vous ne pouvez pas supprimer une tâche qui ne vous appartient pas.');
+        $this->assertSelectorTextContains('div.alert.alert-danger', 'Vous n\'avez pas les droits pour effectuer cette action.');
     }
 
 }

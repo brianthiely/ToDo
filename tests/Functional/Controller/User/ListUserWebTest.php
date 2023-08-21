@@ -25,7 +25,9 @@ class ListUserWebTest extends AbstractWebTestCase
     {
         $this->loginUser('user');
         $this->accessPage('user_list');
-        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+        $this->client->followRedirect();
+
+        $this->assertSelectorTextContains('div.alert.alert-danger','Vous n\'avez pas les droits pour effectuer cette action.');
     }
 
 
