@@ -24,13 +24,13 @@ class UserController extends AbstractController
     }
 
     #[Route('/users', name: 'user_list')]
-    public function listAction(): Response
+    public function listUsers(): Response
     {
         return $this->render('user/list.html.twig', ['users' => $this->userRepository->findAll()]);
     }
 
     #[Route('/users/create', name: 'user_create')]
-    public function createAction(Request $request): RedirectResponse|Response
+    public function createUser(Request $request): RedirectResponse|Response
     {
         $user = new Users();
         $form = $this->createForm(UserType::class, $user);
@@ -53,7 +53,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/users/{id}/edit', name: 'user_edit')]
-    public function editAction(Users $user, Request $request): RedirectResponse|Response
+    public function editUser(Users $user, Request $request): RedirectResponse|Response
     {
         $form = $this->createForm(UserType::class, $user);
 

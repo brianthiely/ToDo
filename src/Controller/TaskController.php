@@ -23,7 +23,7 @@ class TaskController extends AbstractController
     }
 
     #[Route('/tasks', name: 'task_list')]
-    public function listAction(): Response
+    public function listTask(): Response
     {
         return $this->render('task/list.html.twig', ['tasks' => $this->taskRepository->findAll()]);
     }
@@ -31,7 +31,7 @@ class TaskController extends AbstractController
     /**
      */
     #[Route('/tasks/create', name: 'task_create')]
-    public function createAction(Request $request): RedirectResponse|Response
+    public function createTask(Request $request): RedirectResponse|Response
     {
         $task = new Task();
         $task->setUser($this->getUser());
@@ -52,7 +52,7 @@ class TaskController extends AbstractController
     }
 
     #[Route('/tasks/{id}/edit', name: 'task_edit')]
-    public function editAction(Task $task, Request $request): RedirectResponse|Response
+    public function editTask(Task $task, Request $request): RedirectResponse|Response
     {
         $user = $this->getUser();
         $taskUser = $task->getUser();
@@ -82,7 +82,7 @@ class TaskController extends AbstractController
     }
 
     #[Route('/tasks/{id}/toggle', name: 'task_toggle')]
-    public function toggleTaskAction(Task $task): RedirectResponse
+    public function toggleTask(Task $task): RedirectResponse
     {
         $user = $this->getUser();
         $taskUser = $task->getUser();
@@ -101,7 +101,7 @@ class TaskController extends AbstractController
     }
 
     #[Route('/tasks/{id}/delete', name: 'task_delete')]
-    public function deleteTaskAction(Task $task): RedirectResponse
+    public function deleteTask(Task $task): RedirectResponse
     {
         $user = $this->getUser();
         $taskUser = $task->getUser();
