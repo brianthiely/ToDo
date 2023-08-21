@@ -53,8 +53,9 @@ class EditUserWebTest extends AbstractWebTestCase
         $userId = $user->getId();
 
         $this->accessPage('user_edit', ['id' => $userId]);
+        $this->client->followRedirect();
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+        $this->assertSelectorTextContains('div.alert.alert-danger','Vous n\'avez pas les droits pour effectuer cette action.');
 
     }
 

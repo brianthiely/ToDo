@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class TaskController extends AbstractController
 {
@@ -23,15 +24,13 @@ class TaskController extends AbstractController
     }
 
     #[Route('/tasks', name: 'task_list')]
-    public function listAction(): Response
+    public function listTask(): Response
     {
         return $this->render('task/list.html.twig', ['tasks' => $this->taskRepository->findAll()]);
     }
 
-    /**
-     */
     #[Route('/tasks/create', name: 'task_create')]
-    public function createAction(Request $request): RedirectResponse|Response
+    public function createTask(Request $request): RedirectResponse|Response
     {
         $task = new Task();
         $task->setUser($this->getUser());
@@ -52,16 +51,9 @@ class TaskController extends AbstractController
     }
 
     #[Route('/tasks/{id}/edit', name: 'task_edit')]
-    public function editAction(Task $task, Request $request): RedirectResponse|Response
+    #[isGranted('TASK_EDIT', 'task')]
+    public function editTask(Task $task, Request $request): RedirectResponse|Response
     {
-        $user = $this->getUser();
-        $taskUser = $task->getUser();
-
-
-        if (($taskUser !== $user) && ($taskUser->getUsername() !== 'Anonyme' || !$this->isGranted('ROLE_ADMIN'))) {
-            $this->addFlash('error', 'Vous ne pouvez pas modifier une tâche qui ne vous appartient pas.');
-            return $this->redirectToRoute('task_list');
-        }
 
         $form = $this->createForm(TaskType::class, $task);
 
@@ -82,16 +74,9 @@ class TaskController extends AbstractController
     }
 
     #[Route('/tasks/{id}/toggle', name: 'task_toggle')]
-    public function toggleTaskAction(Task $task): RedirectResponse
+    #[isGranted('TASK_EDIT', 'task')]
+    public function toggleTask(Task $task): RedirectResponse
     {
-        $user = $this->getUser();
-        $taskUser = $task->getUser();
-
-        if (($taskUser !== $user) && ($taskUser->getUsername() !== 'Anonyme' || !$this->isGranted('ROLE_ADMIN'))) {
-            $this->addFlash('error', 'Vous ne pouvez pas marquer une tâche qui ne vous appartient pas comme faite.');
-            return $this->redirectToRoute('task_list');
-        }
-
         $task->toggle(!$task->isDone());
         $this->em->flush();
 
@@ -101,16 +86,9 @@ class TaskController extends AbstractController
     }
 
     #[Route('/tasks/{id}/delete', name: 'task_delete')]
-    public function deleteTaskAction(Task $task): RedirectResponse
+    #[isGranted('TASK_DELETE', 'task')]
+    public function deleteTask(Task $task): RedirectResponse
     {
-        $user = $this->getUser();
-        $taskUser = $task->getUser();
-
-        if (($taskUser !== $user) && ($taskUser->getUsername() !== 'Anonyme' || !$this->isGranted('ROLE_ADMIN'))) {
-            $this->addFlash('error', 'Vous ne pouvez pas supprimer une tâche qui ne vous appartient pas.');
-            return $this->redirectToRoute('task_list');
-        }
-
         $this->em->remove($task);
         $this->em->flush();
 
