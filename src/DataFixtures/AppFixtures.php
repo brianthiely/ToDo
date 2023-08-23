@@ -34,7 +34,7 @@ class AppFixtures extends Fixture
             $user = new Users();
             $user->setUsername($data['username']);
             $user->setEmail($data['email']);
-            $user->setPassword($this->passwordEncoder->hashPassword($user, $data['password']));
+            $user->setPassword($data['password']);
             $user->setRoles($data['roles']);
             $manager->persist($user);
         }
