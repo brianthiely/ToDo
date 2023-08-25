@@ -26,8 +26,12 @@
 
     <source>
         <include>
-            <directory>./src</directory>
+            <directory suffix=".php">src</directory>
         </include>
+        <exclude>
+            <directory suffix=".php">src/Command</directory>
+            <directory suffix=".php">src/DataFixtures</directory>
+        </exclude>
     </source>
 
     <coverage includeUncoveredFiles="true"
@@ -35,8 +39,6 @@
               ignoreDeprecatedCodeUnits="true"
               disableCodeCoverageIgnore="true">
     </coverage>
-
-
 
     <extensions>
         <bootstrap class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension" />
