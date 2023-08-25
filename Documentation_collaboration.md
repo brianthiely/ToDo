@@ -28,3 +28,9 @@ Ce document est destiné à guider les développeurs travaillant sur le projet S
 
 - **Codacy :** Aucune erreur de niveau moyen ou critique ne doit être présente.
 - **Profiler Symfony :** Utilisé pour s'assurer qu'il n'y a pas de problèmes de performance, comme des appels trop longs à la base de données.
+- **Tests :** Avoir une couverture de code de 70%.
+
+Pour voir la couverture de code :
+```php
+vendor/bin/phpunit --coverage-html public/test-coverage
+```
