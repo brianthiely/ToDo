@@ -9,7 +9,7 @@ Installez les dépendances nécessaires avec les commandes suivantes :
 ```bash
 composer install
 yarn install
-yarn build
+yarn yarn encore dev
 ```
 
 ## Étape 2: Configurer la Base de Données
