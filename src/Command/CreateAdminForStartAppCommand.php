@@ -12,7 +12,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[AsCommand(
-    name: 'CreateAdminForStartApp',
+    name: 'create:admin',
     description: 'Add a short description for your command',
 )]
 class CreateAdminForStartAppCommand extends Command
