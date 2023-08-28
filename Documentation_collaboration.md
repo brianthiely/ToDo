@@ -17,7 +17,11 @@ Ce document est destiné à guider les développeurs travaillant sur le projet S
 
 ### Conventions de Codage
 
-- Il n'y a pas de conventions de codage spécifiques à suivre dans ce projet.
+- Les tests fonctionnels doivent être dans le dossier `tests/Functional`.
+- Les tests unitaires doivent être dans le dossier `tests/Unit`.
+- Les tests doivent être nommés `NomDeLaClasseTest.php`.
+- Les tests doivent être nommés `testNomDeLaMéthode()`.
+- Pour jouer les tests, utiliser la commande `vendor/bin/phpunit`.
 
 ### Étapes de Validation et de Déploiement
 
