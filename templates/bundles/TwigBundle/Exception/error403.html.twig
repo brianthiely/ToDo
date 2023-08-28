@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Forbidden{% endblock %}
+
+{% block body %}
+    <h1>Forbidden</h1>
+
+    <p>
+        You don't have permission to access {{ app.request.uri }} on this server.
+    </p>
+{% endblock %}
+
